@@ -192,8 +192,35 @@
   </div>
 </div>
 
+<div class="calc-section">
+  <h3>Step 4 - Capacity Expansion Bonus (separate scenario)</h3>
+  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Models the bonus you earn when AbEM commissions new commercial production equipment whose business case is materially supported by your sourced pipeline. Independent of the BD Fee modeled above.</p>
+
+  <div class="input-row">
+    <label>New equipment Year 1 gross revenue</label>
+    <input type="range" id="capRev" min="1000000" max="10000000" step="100000" value="3000000">
+    <span class="val" id="capRev-out">$3,000,000</span>
+  </div>
+
+  <div class="step3-content">
+    <div class="formula">
+      Capacity Expansion Bonus = 2.5% &times; Gross Revenue (Year 1)<br>
+      <span id="cap-formula"></span><br><br>
+      <em>Paid annually on the anniversary of first commercial production on the new equipment. The CEO and COO will work with you to confirm eligibility based on your sourced pipeline's contribution to the expansion decision.</em>
+    </div>
+    <div class="metric-grid">
+      <div class="metric">
+        <p class="metric-label">Capacity Expansion Bonus</p>
+        <p class="metric-val" id="m-cap">$0</p>
+        <p class="metric-sub">first 12 months on new equipment</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
-  <p><strong>Important:</strong> BD Fees apply ONLY to new business accounts. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended until trailing 12-month utilization recovers to the 70% threshold.</p>
+  <p><strong>BD Fee:</strong> Applies ONLY to new business accounts. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended until trailing 12-month utilization recovers to the 70% threshold.</p>
+  <p><strong>Capacity Expansion Bonus:</strong> Eligibility requires CEO and COO joint determination that the expansion is materially supported by demand sourced through your business development efforts. Expansions driven by factors unrelated to your BD work (acquisitions, regulatory requirements, equipment efficiency upgrades, or demand sourced by others) do not qualify.</p>
   <p>This calculator illustrates the fee structure documented in the addendum to your offer letter dated August 3, 2024. In the event of any discrepancy between this calculator and the signed addendum, the signed addendum governs. Calculator outputs are illustrative only and not a guarantee of payment.</p>
 </footer>
 
@@ -289,6 +316,20 @@
     document.getElementById(id).addEventListener('input', update);
     document.getElementById(id).addEventListener('change', update);
   });
+
+  // Capacity Expansion Bonus calculator
+  const CAP_RATE = 0.025;
+  function updateCap() {
+    const capRev = parseFloat(document.getElementById('capRev').value);
+    const capBonus = capRev * CAP_RATE;
+    document.getElementById('capRev-out').textContent = '$' + capRev.toLocaleString('en-US');
+    document.getElementById('m-cap').textContent = '$' + Math.round(capBonus).toLocaleString('en-US');
+    document.getElementById('cap-formula').innerHTML =
+      '&nbsp;&nbsp;= <span class="num">2.5%</span> &times; <span class="num">$' + capRev.toLocaleString('en-US') + '</span> = <span class="num">$' + Math.round(capBonus).toLocaleString('en-US') + '</span>';
+  }
+  document.getElementById('capRev').addEventListener('input', updateCap);
+  document.getElementById('capRev').addEventListener('change', updateCap);
+  updateCap();
 
   update();
 </script>
