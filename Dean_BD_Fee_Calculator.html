@@ -212,15 +212,15 @@
       <div class="metric">
         <p class="metric-label">Capacity Expansion Bonus</p>
         <p class="metric-val" id="m-cap">$0</p>
-        <p class="metric-sub">first 12 months on new equipment</p>
+        <p class="metric-sub">paid on first anniversary of production</p>
       </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <p><strong>BD Fee:</strong> Applies ONLY to new business accounts. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended until trailing 12-month utilization recovers to the 70% threshold.</p>
-  <p><strong>Capacity Expansion Bonus:</strong> Eligibility requires CEO and COO joint determination that the expansion is materially supported by demand sourced through your business development efforts. Expansions driven by factors unrelated to your BD work (acquisitions, regulatory requirements, equipment efficiency upgrades, or demand sourced by others) do not qualify.</p>
+  <p><strong>BD Fee:</strong> Applies ONLY to new business accounts. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended. During suspension, fees continue to accrue based on actual quarterly Gross Profit and are paid in the first quarterly cycle after trailing 12-month utilization recovers to 70%. The 12-month measurement window for each qualifying account continues running during suspension.</p>
+  <p><strong>Capacity Expansion Bonus:</strong> The CEO and COO will work with you to confirm eligibility based on your sourced pipeline's contribution to the expansion decision. Expansions arising from factors unrelated to your BD work (acquisitions, regulatory requirements, equipment efficiency upgrades, or demand sourced by others) are outside the scope of this bonus. Paid annually on the anniversary of first commercial production.</p>
   <p>This calculator illustrates the fee structure documented in the addendum to your offer letter dated August 3, 2024. In the event of any discrepancy between this calculator and the signed addendum, the signed addendum governs. Calculator outputs are illustrative only and not a guarantee of payment.</p>
 </footer>
 
@@ -306,7 +306,7 @@
       document.getElementById('fee-explainer').innerHTML =
         'BD Fee = 5% of Gross Profit (New Business Only)<br>' +
         '&nbsp;&nbsp;= <span class="num">5%</span> \u00d7 <span class="num">' + fmt(grossProfit) + '</span> = <span class="num">' + fmt(totalEarned) + '</span><br><br>' +
-        '<em>You earn 5% of Gross Profit from new accounts in the quarter it is generated, for up to 12 months after qualifying. Payments require trailing 12-month plant utilization (all clients) to exceed 70% at each quarterly assessment.</em>';
+        '<em>You earn 5% of Gross Profit from new accounts in the quarter it is generated, for up to 12 months after qualifying. If trailing 12-month plant utilization (all clients) falls below 70% at a quarterly assessment, fees continue to accrue but payment is deferred until utilization recovers.</em>';
     }
 
     document.getElementById('m-total').textContent = fmt(totalEarned);
