@@ -150,7 +150,7 @@
 <div class="divider"></div>
 
 <div class="calc-section">
-  <h3>Step 1 &mdash; Gross Profit calculation</h3>
+  <h3>Step 1 - Annual Revenue</h3>
   <div class="formula" id="gp-formula"></div>
   <div class="metric-grid">
     <div class="metric">
@@ -158,16 +158,8 @@
       <p class="metric-val" id="m-rev">$0</p>
     </div>
     <div class="metric">
-      <p class="metric-label">Variable costs</p>
-      <p class="metric-val" id="m-vc">$0</p>
-    </div>
-    <div class="metric">
-      <p class="metric-label">Gross Profit</p>
-      <p class="metric-val" id="m-gp">$0</p>
-    </div>
-    <div class="metric">
-      <p class="metric-label">Gross Margin</p>
-      <p class="metric-val" id="m-gm">0%</p>
+      <p class="metric-label">Variable cost %</p>
+      <p class="metric-val" id="m-vc">0%</p>
     </div>
   </div>
 </div>
@@ -204,7 +196,7 @@
 
   <div class="step3-content">
     <div class="formula">
-      Capacity Expansion Bonus = 2.5% &times; Gross Revenue (Year 1)<br>
+      Capacity Expansion Bonus = 2% &times; Gross Revenue (Year 1)<br>
       <span id="cap-formula"></span><br><br>
       <em>Paid annually on the anniversary of first commercial production on the new equipment. The CEO and COO will work with you to confirm eligibility based on your sourced pipeline's contribution to the expansion decision.</em>
     </div>
@@ -219,7 +211,7 @@
 </div>
 
 <footer>
-  <p><strong>BD Fee:</strong> Applies ONLY to new business accounts. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended. During suspension, fees continue to accrue based on actual quarterly Gross Profit and are paid in the first quarterly cycle after trailing 12-month utilization recovers to 70%. The 12-month measurement window for each qualifying account continues running during suspension.</p>
+  <p><strong>BD Fee:</strong> 3% of gross revenue on qualifying new accounts, for 12 months from first commercial production. Each quarter, AbEM measures total plant utilization across the trailing 12 months (all existing and new clients combined) against a baseline of 245 available production days (Mon-Fri less holidays and scheduled maintenance). If utilization is below 70% at any quarterly check, BD Fee payments are suspended. During suspension, fees continue to accrue based on actual quarterly revenue and are paid in the first quarterly cycle after trailing 12-month utilization recovers to 70%. The 12-month measurement window for each qualifying account continues running during suspension.</p>
   <p><strong>Capacity Expansion Bonus:</strong> The CEO and COO will work with you to confirm eligibility based on your sourced pipeline's contribution to the expansion decision. Expansions arising from factors unrelated to your BD work (acquisitions, regulatory requirements, equipment efficiency upgrades, or demand sourced by others) are outside the scope of this bonus. Paid annually on the anniversary of first commercial production.</p>
   <p>This calculator illustrates the fee structure documented in the addendum to your offer letter dated August 3, 2024. In the event of any discrepancy between this calculator and the signed addendum, the signed addendum governs. Calculator outputs are illustrative only and not a guarantee of payment.</p>
 </footer>
@@ -230,7 +222,7 @@
   const QT_WEEKLY_MIN = 92500;
   const QT_VARCOST_MAX = 0.35;
   const QT_WEEKS_MIN = 4;
-  const BD_RATE = 0.05;
+  const BD_RATE = 0.03;
 
   const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
   const pct = n => (n * 100).toFixed(1) + '%';
@@ -261,25 +253,15 @@
     document.getElementById('varcost-out').textContent = (varcostPct * 100).toFixed(0) + '%';
 
     const annualRev = weekly * weeks;
-    const variableCosts = annualRev * varcostPct;
-    const grossProfit = annualRev - variableCosts;
-    const grossMargin = annualRev > 0 ? grossProfit / annualRev : 0;
 
     document.getElementById('gp-formula').innerHTML =
       'Annual Revenue = Weekly Revenue \u00d7 Weeks of Production<br>' +
       '&nbsp;&nbsp;(includes capacity reservation fees + conversion fees)<br>' +
       '&nbsp;&nbsp;= <span class="num">' + fmt(weekly) + '</span> \u00d7 <span class="num">' + weeks + '</span> = <span class="num">' + fmt(annualRev) + '</span><br><br>' +
-      'Variable Costs = Annual Revenue \u00d7 Variable Cost %<br>' +
-      '&nbsp;&nbsp;(raw materials + packaging + pass-through; excludes direct labor)<br>' +
-      '&nbsp;&nbsp;= <span class="num">' + fmt(annualRev) + '</span> \u00d7 <span class="num">' + (varcostPct*100).toFixed(0) + '%</span> = <span class="num">' + fmt(variableCosts) + '</span><br><br>' +
-      'Gross Profit = Annual Revenue \u2212 Variable Costs<br>' +
-      '&nbsp;&nbsp;= <span class="num">' + fmt(annualRev) + '</span> \u2212 <span class="num">' + fmt(variableCosts) + '</span> = <span class="num">' + fmt(grossProfit) + '</span><br><br>' +
-      'Gross Margin = Gross Profit \u00f7 Annual Revenue = <span class="num">' + pct(grossMargin) + '</span>';
+      'Variable cost % is used to verify the qualifying threshold (must not exceed 35% of revenue).';
 
     document.getElementById('m-rev').textContent = fmt(annualRev);
-    document.getElementById('m-vc').textContent = fmt(variableCosts);
-    document.getElementById('m-gp').textContent = fmt(grossProfit);
-    document.getElementById('m-gm').textContent = pct(grossMargin);
+    document.getElementById('m-vc').textContent = (varcostPct*100).toFixed(0) + '%';
 
     const passWeekly = weekly >= QT_WEEKLY_MIN;
     const passVarCost = varcostPct <= QT_VARCOST_MAX;
@@ -302,11 +284,11 @@
     } else {
       statusEl.className = 'status ok';
       statusEl.textContent = 'Account qualifies. BD Fee applies for 12 months.';
-      totalEarned = grossProfit * BD_RATE;
+      totalEarned = annualRev * BD_RATE;
       document.getElementById('fee-explainer').innerHTML =
-        'BD Fee = 5% of Gross Profit (New Business Only)<br>' +
-        '&nbsp;&nbsp;= <span class="num">5%</span> \u00d7 <span class="num">' + fmt(grossProfit) + '</span> = <span class="num">' + fmt(totalEarned) + '</span><br><br>' +
-        '<em>You earn 5% of Gross Profit from new accounts in the quarter it is generated, for up to 12 months after qualifying. If trailing 12-month plant utilization (all clients) falls below 70% at a quarterly assessment, fees continue to accrue but payment is deferred until utilization recovers.</em>';
+        'BD Fee = 3% of Gross Revenue<br>' +
+        '&nbsp;&nbsp;= <span class="num">3%</span> \u00d7 <span class="num">' + fmt(annualRev) + '</span> = <span class="num">' + fmt(totalEarned) + '</span><br><br>' +
+        '<em>You earn 3% of gross revenue from qualifying new accounts, paid quarterly for 12 months from the date of first commercial production. If trailing 12-month plant utilization falls below 70%, fees continue to accrue but payment is deferred until utilization recovers.</em>';
     }
 
     document.getElementById('m-total').textContent = fmt(totalEarned);
@@ -318,14 +300,14 @@
   });
 
   // Capacity Expansion Bonus calculator
-  const CAP_RATE = 0.025;
+  const CAP_RATE = 0.02;
   function updateCap() {
     const capRev = parseFloat(document.getElementById('capRev').value);
     const capBonus = capRev * CAP_RATE;
     document.getElementById('capRev-out').textContent = '$' + capRev.toLocaleString('en-US');
     document.getElementById('m-cap').textContent = '$' + Math.round(capBonus).toLocaleString('en-US');
     document.getElementById('cap-formula').innerHTML =
-      '&nbsp;&nbsp;= <span class="num">2.5%</span> &times; <span class="num">$' + capRev.toLocaleString('en-US') + '</span> = <span class="num">$' + Math.round(capBonus).toLocaleString('en-US') + '</span>';
+      '&nbsp;&nbsp;= <span class="num">2%</span> &times; <span class="num">$' + capRev.toLocaleString('en-US') + '</span> = <span class="num">$' + Math.round(capBonus).toLocaleString('en-US') + '</span>';
   }
   document.getElementById('capRev').addEventListener('input', updateCap);
   document.getElementById('capRev').addEventListener('change', updateCap);
